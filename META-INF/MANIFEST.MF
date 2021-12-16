@@ -17,4 +17,4 @@ Export-Package: org.soropeza.event,
  org.soropeza.listener,
  org.soropeza.webui.component
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.adempiere.plugin.utils.AdempiereActivator
+Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
