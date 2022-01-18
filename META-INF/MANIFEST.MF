@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Formutils
 Bundle-SymbolicName: com.soropeza.formutils
-Bundle-Version: 8.2.0.qualifier
-Bundle-Vendor: SOROPEZA
+Bundle-Version: 9.0.0.qualifier
 Automatic-Module-Name: com.soropeza.formutils
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.adempiere.base,
