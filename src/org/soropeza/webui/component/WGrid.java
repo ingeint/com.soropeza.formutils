@@ -44,11 +44,10 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 
 	public WGrid() {
 		super();
-		styleLabelsBold = "font-size:13px;font-weight: bold";
+		styleLabelsBold = "font-size:13px;font-weight: bold;";
 		rows = this.newRows();
 		header = rows.newRow();
 		header.setStyle("background-color: #DEDDDD");
-
 	}
 
 	public void addHeader(String title, int colSpan) {
@@ -81,10 +80,11 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 
 	public void addLine(ListCellStyle style, Integer Record_ID, Object... columns) {
 		Row row = rows.newRow();
+
 		if (style != null)
 			row.setStyle(style.getStyle());
 		row.setAttribute("Record_ID", Record_ID);
-
+		
 		for (int i = 0; i < columns.length; i++) {
 			if (columns[i] == null) {
 				row.appendCellChild(new Label());
@@ -139,7 +139,6 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 				row.appendCellChild(new Label(columns[i].toString()), lstColSpan.get(i));
 			}
 		}
-
 	}
 
 	@Override
@@ -147,6 +146,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		Object source = evt.getSource();
 		WEditor editor = (WEditor) source;
 		Cell cell = (Cell) editor.getComponent().getParent();
+		
 		Row row = (Row) cell.getParent();
 		int iRow = row.getIndex();
 		int iColumn = getColumnIndex(cell, row);
@@ -237,6 +237,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		int size = 0;
 		if (getRows() != null) {
 			size = getRows().getChildren().size();
+
 		}
 		return size;
 	}
