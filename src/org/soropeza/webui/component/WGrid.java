@@ -1,7 +1,6 @@
 package org.soropeza.webui.component;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.adempiere.webui.component.Button;
@@ -12,13 +11,13 @@ import org.adempiere.webui.component.Label;
 import org.adempiere.webui.component.NumberBox;
 import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
+import org.adempiere.webui.component.Textbox;
 import org.adempiere.webui.component.ToolBarButton;
 import org.adempiere.webui.editor.WEditor;
 import org.adempiere.webui.editor.WSearchEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
 import org.adempiere.webui.util.ZKUpdateUtil;
-import org.compiere.util.Env;
 import org.soropeza.event.GridValueChangeEvent;
 import org.soropeza.listener.GridValueChangeListener;
 import org.zkoss.zk.ui.Component;
@@ -228,6 +227,9 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 			value= searchEditor.getValue();	
 		}else if (component instanceof BooleanColumn) {
 			BooleanColumn editor = (BooleanColumn) component;
+			value= editor.getValue();
+		} else if (component instanceof Textbox) {
+			Textbox editor = (Textbox) component;
 			value= editor.getValue();
 		}
 		return value;
