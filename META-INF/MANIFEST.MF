@@ -11,7 +11,8 @@ Require-Bundle: org.adempiere.base,
  zcommon,
  org.adempiere.plugin.utils;bundle-version="8.2.0",
  zul,
- zk
+ zk,
+ com.ingeint.custom.warehouse;bundle-version="9.0.0"
 Export-Package: org.soropeza.event,
  org.soropeza.listener,
  org.soropeza.webui.component

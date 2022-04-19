@@ -77,34 +77,27 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 
-
-
-
-
 /**
- * Renderer for {@link org.adempiere.webui.component.ListItems}
- * for the {@link org.adempiere.webui.component.Listbox}.
+ * Renderer for {@link org.adempiere.webui.component.ListItems} for the
+ * {@link org.adempiere.webui.component.Listbox}.
  *
  * @author Andrew Kimball
  *
  */
-public class WListItemRenderer extends org.adempiere.webui.component.WListItemRenderer implements ValueChangeListener
-{
+public class WListItemRenderer extends org.adempiere.webui.component.WListItemRenderer implements ValueChangeListener {
 	/** Array of listeners for changes in the table components. */
-	protected ArrayList<TableValueChangeListener> m_listeners =
-            new ArrayList<TableValueChangeListener>();
-	
-	protected ArrayList<OnClickComponentTableListener> onClickComponentlisteners =
-            new ArrayList<OnClickComponentTableListener>();
+	protected ArrayList<TableValueChangeListener> m_listeners = new ArrayList<TableValueChangeListener>();
+
+	protected ArrayList<OnClickComponentTableListener> onClickComponentlisteners = new ArrayList<OnClickComponentTableListener>();
 
 	/** A list containing the indices of the currently selected ListItems. */
 	private Set<ListItem> m_selectedItems = new HashSet<ListItem>();
-	/**	Array of table details. */
+	/** Array of table details. */
 	private ArrayList<WTableColumn> m_tableColumns = new ArrayList<WTableColumn>();
 	/** Array of {@link ListHeader}s for the list head. */
-    private ArrayList<ListHeader> m_headers = new ArrayList<ListHeader>();
+	private ArrayList<ListHeader> m_headers = new ArrayList<ListHeader>();
 
-    private Listbox listBox;
+	private Listbox listBox;
 
 	private EventListener<Event> cellListener;
 
@@ -112,23 +105,20 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	 * Default constructor.
 	 *
 	 */
-	public WListItemRenderer()
-	{
+	public WListItemRenderer() {
 		super();
 	}
 
 	/**
 	 * Constructor specifying the column headers.
 	 *
-	 * @param columnNames	vector of column titles.
+	 * @param columnNames vector of column titles.
 	 */
-	public WListItemRenderer(List< ? extends String> columnNames)
-	{
+	public WListItemRenderer(List<? extends String> columnNames) {
 		super();
 		WTableColumn tableColumn;
 
-		for (String columnName : columnNames)
-		{
+		for (String columnName : columnNames) {
 			tableColumn = new WTableColumn();
 			tableColumn.setHeaderValue(Util.cleanAmp(columnName));
 			m_tableColumns.add(tableColumn);
@@ -138,77 +128,67 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	/**
 	 * Get the column details of the specified <code>column</code>.
 	 *
-	 * @param columnIndex	The index of the column for which details are to be retrieved.
-	 * @return	The details of the column at the specified index.
+	 * @param columnIndex The index of the column for which details are to be
+	 *                    retrieved.
+	 * @return The details of the column at the specified index.
 	 */
-	private WTableColumn getColumn(int columnIndex)
-	{
-		try
-		{
+	private WTableColumn getColumn(int columnIndex) {
+		try {
 			return m_tableColumns.get(columnIndex);
-		}
-		catch (IndexOutOfBoundsException exception)
-		{
-			throw new IllegalArgumentException("There is no WTableColumn at column "
-                    + columnIndex);
+		} catch (IndexOutOfBoundsException exception) {
+			throw new IllegalArgumentException("There is no WTableColumn at column " + columnIndex);
 		}
 	}
 
-
-	/* (non-Javadoc)
-	 * @see org.zkoss.zul.ListitemRenderer#render(org.zkoss.zul.Listitem, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.zkoss.zul.ListitemRenderer#render(org.zkoss.zul.Listitem,
+	 * java.lang.Object)
 	 */
 	@Override
-	public void render(Listitem item, Object data, int index) throws Exception
-	{
-		render((ListItem)item, data, index);
+	public void render(Listitem item, Object data, int index) throws Exception {
+		render((ListItem) item, data, index);
 	}
 
 	/**
 	 * Renders the <code>data</code> to the specified <code>Listitem</code>.
 	 *
-	 * @param item 	the listitem to render the result.
-	 * 				Note: when this method is called, the listitem has no child
-	 * 				at all.
-	 * @param data 	that is returned from {@link ListModel#getElementAt}
+	 * @param item the listitem to render the result. Note: when this method is
+	 *             called, the listitem has no child at all.
+	 * @param data that is returned from {@link ListModel#getElementAt}
 	 * @throws Exception
 	 * @see {@link #render(Listitem, Object)}
 	 */
-	private void render(ListItem item, Object data, int index)
-	{
+	private void render(ListItem item, Object data, int index) {
 		Listcell listcell = null;
 		int colIndex = 0;
-		int rowIndex = item.getIndex();	
+		int rowIndex = item.getIndex();
 		WListbox table = null;
 
-		if (item.getListbox() instanceof WListbox)
-		{
-			table = (WListbox)item.getListbox();
+		if (item.getListbox() instanceof WListbox) {
+			table = (WListbox) item.getListbox();
 		}
 
-		if (!(data instanceof List))
-		{
+		if (!(data instanceof List)) {
 			throw new IllegalArgumentException("A model element was not a list");
 		}
 
-		if (listBox == null || listBox != item.getListbox())
-		{
+		if (listBox == null || listBox != item.getListbox()) {
 			listBox = item.getListbox();
 		}
-		if (cellListener == null)
-		{
+		if (cellListener == null) {
 			cellListener = new CellListener();
 		}
 
-		 List<?> fields = (List<?>)data;
-		 String listCellStyle = getListCellStyle(fields);
-		for (Object field : fields)
-		{
-			
+		List<?> fields = (List<?>) data;
+		String listCellStyle = getListCellStyle(fields);
+		for (Object field : fields) {
+
 			listcell = getCellComponent(table, field, rowIndex, colIndex);
 			listcell.setParent(item);
 			listcell.addEventListener(Events.ON_DOUBLE_CLICK, cellListener);
-			if (listCellStyle!=null) {
+			if (listCellStyle != null) {
 				listcell.setStyle(listCellStyle);
 			}
 			colIndex++;
@@ -221,8 +201,8 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 
 	private String getListCellStyle(List<?> fields) {
 		for (Object field : fields) {
-			if (field instanceof ListCellStyle){// update sergioropeza88@gmail.com
-				ListCellStyle lStyle = (ListCellStyle)field;
+			if (field instanceof ListCellStyle) {// update sergioropeza88@gmail.com
+				ListCellStyle lStyle = (ListCellStyle) field;
 				return lStyle.getStyle();
 			}
 		}
@@ -232,16 +212,14 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	/**
 	 * Generate the cell for the given <code>field</code>.
 	 *
-	 * @param table 	The table into which the cell will be placed.
-	 * @param field		The data field for which the cell is to be created.
-	 * @param rowIndex	The row in which the cell is to be placed.
-	 * @param columnIndex	The column in which the cell is to be placed.
-	 * @return	The list cell component.
+	 * @param table       The table into which the cell will be placed.
+	 * @param field       The data field for which the cell is to be created.
+	 * @param rowIndex    The row in which the cell is to be placed.
+	 * @param columnIndex The column in which the cell is to be placed.
+	 * @return The list cell component.
 	 */
-	protected Listcell getCellComponent(WListbox table, Object field,
-									  int rowIndex, int columnIndex)
-	{
-		
+	protected Listcell getCellComponent(WListbox table, Object field, int rowIndex, int columnIndex) {
+
 		ListCell listcell = new ListCell();
 		if (m_tableColumns.size() > columnIndex) {
 			WTableColumn column = getColumn(columnIndex);
@@ -251,12 +229,10 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 		}
 		boolean isCellEditable = table != null ? table.isCellEditable(rowIndex, columnIndex) : false;
 
-        // TODO put this in factory method for generating cell renderers, which
-        // are assigned to Table Columns
-		if (field != null)
-		{
-			if (field instanceof Boolean)
-			{
+		// TODO put this in factory method for generating cell renderers, which
+		// are assigned to Table Columns
+		if (field != null) {
+			if (field instanceof Boolean) {
 				listcell.setValue(Boolean.valueOf(field.toString()));
 
 				if (table != null && columnIndex == 0)
@@ -264,26 +240,20 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 				Checkbox checkbox = new Checkbox();
 				checkbox.setChecked(Boolean.valueOf(field.toString()));
 
-				if (isCellEditable)
-				{
+				if (isCellEditable) {
 					checkbox.setEnabled(true);
 					checkbox.addEventListener(Events.ON_CHECK, this);
-				}
-				else
-				{
+				} else {
 					checkbox.setEnabled(false);
 				}
 
 				listcell.appendChild(checkbox);
 				ZkCssHelper.appendStyle(listcell, "text-align:center");
-			}
-			else if (field instanceof Number)
-			{
+			} else if (field instanceof Number) {
 				if (m_tableColumns != null && columnIndex < m_tableColumns.size()
 						&& m_tableColumns.get(columnIndex).getColumnClass() != null
-						&& m_tableColumns.get(columnIndex).getColumnClass().getName().equals(MImage.class.getName()) 
-						&& field instanceof Integer)
-				{
+						&& m_tableColumns.get(columnIndex).getColumnClass().getName().equals(MImage.class.getName())
+						&& field instanceof Integer) {
 					MImage mImage = MImage.get(Env.getCtx(), (Integer) field);
 					AImage img = null;
 					byte[] data = mImage.getData();
@@ -299,20 +269,17 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 					image.setStyle("width: 48px; height: 48px;");
 					listcell.appendChild(image);
 					listcell.setStyle("text-align: center;");
-				}
-				else
-				{
+				} else {
 					Language lang = AEnv.getLanguage(Env.getCtx());
 					int displayType = (field instanceof BigDecimal || field instanceof Double || field instanceof Float)
 							? DisplayType.Amount
-						    : DisplayType.Integer;
+							: DisplayType.Integer;
 					DecimalFormat format = DisplayType.getNumberFormat(displayType, lang);
 
 					// set cell value to allow sorting
 					listcell.setValue(field.toString());
 
-					if (isCellEditable)
-					{
+					if (isCellEditable) {
 						NumberBox numberbox = new NumberBox(false);
 						numberbox.getDecimalbox().setFormat(format.toPattern());
 						numberbox.getDecimalbox().setLocale(lang.getLocale());
@@ -320,50 +287,39 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 						numberbox.setValue(field);
 //						numberbox.setWidth("100px");
 						numberbox.setEnabled(true);
-						numberbox.setStyle("text-align:right; width: 96%;"
-										+ listcell.getStyle());
-						numberbox.addEventListener(Events.ON_CHANGE, this);						
+						numberbox.setStyle("text-align:right; width: 96%;" + listcell.getStyle());
+						numberbox.addEventListener(Events.ON_CHANGE, this);
 						listcell.appendChild(numberbox);
 						if (ClientInfo.isMobile())
 							numberbox.getButton().setVisible(false);
-					}
-					else
-					{
+					} else {
 						listcell.setLabel(format.format(field));
 						ZkCssHelper.appendStyle(listcell, "text-align: right");
 					}
 				}
-			}
-			else if (field instanceof Timestamp)
-			{
+			} else if (field instanceof Timestamp) {
 				int refId = 0;
 				if (m_tableColumns != null && columnIndex < m_tableColumns.size()) {
-				 //fercho	refId = m_tableColumns.get(columnIndex).getAD_Reference_ID();
+					// fercho refId = m_tableColumns.get(columnIndex).getAD_Reference_ID();
 				}
 
 				if (refId == 0)
 					refId = DisplayType.Date;
 				SimpleDateFormat dateFormat = DisplayType.getDateFormat(refId, AEnv.getLanguage(Env.getCtx()));
-				listcell.setValue(dateFormat.format((Timestamp)field));
-				if (isCellEditable)
-				{
+				listcell.setValue(dateFormat.format((Timestamp) field));
+				if (isCellEditable) {
 					Datebox datebox = new Datebox();
-					datebox.setValue(new Date(((Timestamp)field).getTime()));
+					datebox.setValue(new Date(((Timestamp) field).getTime()));
 					datebox.addEventListener(Events.ON_CHANGE, this);
 					listcell.appendChild(datebox);
-				}
-				else
-				{
-					listcell.setLabel(dateFormat.format((Timestamp)field));
+				} else {
+					listcell.setLabel(dateFormat.format((Timestamp) field));
 					ZkCssHelper.appendStyle(listcell, "margin: auto");
 				}
-			}
-			else if (field instanceof String)
-			{
+			} else if (field instanceof String) {
 				if (m_tableColumns != null && columnIndex < m_tableColumns.size()
 						&& m_tableColumns.get(columnIndex).getColumnClass() != null
-						&& m_tableColumns.get(columnIndex).getColumnClass().getName().equals(MImage.class.getName()))
-				{
+						&& m_tableColumns.get(columnIndex).getColumnClass().getName().equals(MImage.class.getName())) {
 					try {
 						URL url = new URL(field.toString());
 						AImage aImage = new AImage(url);
@@ -377,257 +333,236 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
-				}
-				else
-				{
+				} else {
 					listcell.setValue(field.toString());
-					if (isCellEditable)
-					{
+					if (isCellEditable) {
 						Textbox textbox = new Textbox();
 						textbox.setValue(field.toString());
 						textbox.addEventListener(Events.ON_CHANGE, this);
 						ZkCssHelper.appendStyle(textbox, "width: 96%;");
 						listcell.appendChild(textbox);
-					}
-					else
-					{
+					} else {
 						listcell.setLabel(field.toString());
 					}
 				}
 			}
 			// if ID column make it invisible
-			else if (field instanceof IDColumn)
-			{
+			else if (field instanceof IDColumn) {
 				listcell.setValue(((IDColumn) field).getRecord_ID());
 				if (!table.isCheckmark()) {
 					table.setCheckmark(true);
 					table.removeEventListener(Events.ON_SELECT, this);
 					table.addEventListener(Events.ON_SELECT, this);
 				}
-			}else if (field instanceof WTableDirEditor){// update sergioropeza88@gmail.com
-				
-				WTableDirEditor editor = (WTableDirEditor)field;
+			} else if (field instanceof WTableDirEditor) {// update sergioropeza88@gmail.com
+
+				WTableDirEditor editor = (WTableDirEditor) field;
 				listcell.setValue(editor.getValue());
-				if (isCellEditable){
+				if (isCellEditable) {
 					editor.addValueChangeListener(this);
 					listcell.appendChild(editor.getComponent());
-				}else{
+				} else {
 					listcell.setLabel(editor.getDisplay());
 				}
 
-			}
-			else if (field instanceof Button){// update sergioropeza88@gmail.com
-				Button button = (Button)field;
-				button.addEventListener(Events.ON_CLICK,this);
+			} else if (field instanceof Button) {// update sergioropeza88@gmail.com
+				Button button = (Button) field;
+				button.addEventListener(Events.ON_CLICK, this);
 				Div div = new Div();
 				div.setStyle("text-align: center");
 				div.appendChild(button);
 				listcell.appendChild(div);
-			}else if (field instanceof ToolBarButton){// update sergioropeza88@gmail.com
-				ToolBarButton button = (ToolBarButton)field;
-				button.addEventListener(Events.ON_CLICK,this);
+			} else if (field instanceof ToolBarButton) {// update sergioropeza88@gmail.com
+				ToolBarButton button = (ToolBarButton) field;
+				button.addEventListener(Events.ON_CLICK, this);
 				Div div = new Div();
 				div.setStyle("text-align: center");
 				div.appendChild(button);
 				listcell.appendChild(div);
-			}else if (field instanceof WSearchEditor){// update sergioropeza88@gmail.com	
-				WSearchEditor editor = (WSearchEditor)field;
+			} else if (field instanceof WSearchEditor) {// update sergioropeza88@gmail.com
+				WSearchEditor editor = (WSearchEditor) field;
 				listcell.setValue(editor.getValue());
-				if (isCellEditable){
+				if (isCellEditable) {
 					editor.addValueChangeListener(this);
 					listcell.appendChild(editor.getComponent());
-				}else{
+				} else {
 					listcell.setLabel(editor.getDisplay());
 				}
-				
-			}else if (field instanceof WNumberEditor){// update sergioropeza88@gmail.com	
-				WNumberEditor editor = (WNumberEditor)field;
+
+			} else if (field instanceof AttributeColumn) {
+				AttributeColumn attributeColumn = (AttributeColumn) field;
+				if (isCellEditable) {
+					attributeColumn.addValueChangeListener(this);
+					listcell.appendChild(attributeColumn.getComponent());
+				} else {
+					listcell.setLabel(attributeColumn.getDisplay());
+				}
+
+			} else if (field instanceof WNumberEditor) {// update sergioropeza88@gmail.com
+				WNumberEditor editor = (WNumberEditor) field;
 				listcell.setValue(editor.getValue());
-				if (isCellEditable){
+				if (isCellEditable) {
 					editor.addValueChangeListener(this);
 					listcell.appendChild(editor.getComponent());
-				}else{
+				} else {
 					listcell.setLabel(editor.getDisplay());
 				}
-				
-			}else if (field instanceof A){// update sergioropeza88@gmail.com	
-				A editor = (A)field;
+
+			} else if (field instanceof A) {// update sergioropeza88@gmail.com
+				A editor = (A) field;
 				listcell.setValue(editor.getLabel());
-				editor.addEventListener(Events.ON_CLICK,this);
+				editor.addEventListener(Events.ON_CLICK, this);
 				listcell.appendChild(editor);
-				
-			} 	
-			else
-			{
+
+			} else {
 				listcell.setLabel(field.toString());
 				listcell.setValue(field.toString());
 			}
-			
+
 		}
 		return listcell;
 	}
 
-
 	/**
-	 *  Update Table Column.
+	 * Update Table Column.
 	 *
-	 *  @param index	The index of the column to update
-	 *  @param header 	The header text for the column
+	 * @param index  The index of the column to update
+	 * @param header The header text for the column
 	 */
-	public void updateColumn(int index, String header)
-	{
+	public void updateColumn(int index, String header) {
 		WTableColumn tableColumn;
 
 		tableColumn = getColumn(index);
 		tableColumn.setHeaderValue(Util.cleanAmp(header));
 
 		return;
-	}   //  updateColumn
+	} // updateColumn
 
 	/**
 	 * @param header
 	 */
-	public void addColumn(String header)
-	{
+	public void addColumn(String header) {
 		addColumn(header, null);
 	}
-	public void addColumn(String header, String description)
-	{
+
+	public void addColumn(String header, String description) {
 		addColumn(header, description, 0);
 	}
+
 	/**
-	 *  Add Table Column.
-	 *  after adding a column, you need to set the column classes again
-	 *  (DefaultTableModel fires TableStructureChanged, which calls
-	 *  JTable.tableChanged .. createDefaultColumnsFromModel
-	 *  @param header The header text for the column
-	 *  @param description
+	 * Add Table Column. after adding a column, you need to set the column classes
+	 * again (DefaultTableModel fires TableStructureChanged, which calls
+	 * JTable.tableChanged .. createDefaultColumnsFromModel
+	 * 
+	 * @param header      The header text for the column
+	 * @param description
 	 */
-	public void addColumn(String header, String description, int AD_Reference_ID)
-	{
+	public void addColumn(String header, String description, int AD_Reference_ID) {
 		WTableColumn tableColumn;
 
 		tableColumn = new WTableColumn();
 		tableColumn.setHeaderValue(Util.cleanAmp(header));
 		tableColumn.setTooltipText(description);
-		//fercho tableColumn.setAD_Reference_ID(AD_Reference_ID);
+		// fercho tableColumn.setAD_Reference_ID(AD_Reference_ID);
 		m_tableColumns.add(tableColumn);
 
 		return;
-	}   //  addColumn
+	} // addColumn
 
 	/**
 	 * Get the number of columns.
+	 * 
 	 * @return the number of columns
 	 */
-	public int getNoColumns()
-	{
+	public int getNoColumns() {
 		return m_tableColumns.size();
 	}
 
 	/**
-	 * This is unused.
-	 * The readonly proprty of a column should be set in
-	 * the parent table.
+	 * This is unused. The readonly proprty of a column should be set in the parent
+	 * table.
 	 *
 	 * @param colIndex
 	 * @param readOnly
 	 * @deprecated
 	 */
-	public void setRO(int colIndex, Boolean readOnly)
-	{
+	public void setRO(int colIndex, Boolean readOnly) {
 		return;
 	}
 
 	/**
-	 * Create a ListHeader using the given <code>headerValue</code> to
-	 * generate the header text.
-	 * The <code>toString</code> method of the <code>headerValue</code>
+	 * Create a ListHeader using the given <code>headerValue</code> to generate the
+	 * header text. The <code>toString</code> method of the <code>headerValue</code>
 	 * is used to set the header text.
 	 *
-	 * @param headerValue	The object to use for generating the header text.
+	 * @param headerValue The object to use for generating the header text.
 	 * @param tooltipText
-     * @param headerIndex   The column index of the header
+	 * @param headerIndex The column index of the header
 	 * @param classType
 	 * @return The generated ListHeader
 	 * @see #renderListHead(ListHead)
 	 */
-	private Component getListHeaderComponent(Object headerValue, String tooltipText, int headerIndex, Class<?> classType)
-	{
-        ListHeader header = null;
+	private Component getListHeaderComponent(Object headerValue, String tooltipText, int headerIndex,
+			Class<?> classType) {
+		ListHeader header = null;
 
-        String headerText = headerValue.toString();
-        if (m_headers.size() <= headerIndex || m_headers.get(headerIndex) == null)
-        {
-        	if (classType != null && classType.isAssignableFrom(IDColumn.class))
-        	{
-        		header = new ListHeader("");
-        		ZKUpdateUtil.setWidth(header, "30px");
-        		header.setAlign("center");
-        		header.setValign("middle");
-        	}
-        	else
-        	{
-	            Comparator<Object> ascComparator =  getColumnComparator(true, headerIndex);
-	            Comparator<Object> dscComparator =  getColumnComparator(false, headerIndex);
+		String headerText = headerValue.toString();
+		if (m_headers.size() <= headerIndex || m_headers.get(headerIndex) == null) {
+			if (classType != null && classType.isAssignableFrom(IDColumn.class)) {
+				header = new ListHeader("");
+				ZKUpdateUtil.setWidth(header, "30px");
+				header.setAlign("center");
+				header.setValign("middle");
+			} else {
+				Comparator<Object> ascComparator = getColumnComparator(true, headerIndex);
+				Comparator<Object> dscComparator = getColumnComparator(false, headerIndex);
 
-	            header = new ListHeader(headerText);
-	            if (!Util.isEmpty(tooltipText))
-	            {
-	            	header.setTooltiptext(tooltipText);
-	            }
+				header = new ListHeader(headerText);
+				if (!Util.isEmpty(tooltipText)) {
+					header.setTooltiptext(tooltipText);
+				}
 
-	            header.setSort("auto");
-	            header.setSortAscending(ascComparator);
-	            header.setSortDescending(dscComparator);
+				header.setSort("auto");
+				header.setSortAscending(ascComparator);
+				header.setSortDescending(dscComparator);
 
-	            int width = headerText.trim().length() * 9;
-	            if (width > 300)
-	            	width = 300;
-	            else if (classType != null)
-	            {
-	            	if (classType.equals(String.class))
-	            	{
-	            		if (width > 0 && width < 180)
-	            			width = 180;
-	            	}
-	            	else if (classType.equals(IDColumn.class))
-	            	{
-	            		header.setSort("none");
-	            		if (width < 30)
-	            			width = 30;
-	            	}
-	            	else if (classType.isAssignableFrom(Boolean.class))
-	            	{
-	            		if (width > 0 && width < 30)
-	            			width = 30;
-	            	}
-		            else if (width > 0 && width < 100)
-	            		width = 100;
-	            }
-	            else if (width > 0 && width < 100)
-	            	width = 100;
+				int width = headerText.trim().length() * 9;
+				if (width > 300)
+					width = 300;
+				else if (classType != null) {
+					if (classType.equals(String.class)) {
+						if (width > 0 && width < 180)
+							width = 180;
+					} else if (classType.equals(IDColumn.class)) {
+						header.setSort("none");
+						if (width < 30)
+							width = 30;
+					} else if (classType.isAssignableFrom(Boolean.class)) {
+						if (width > 0 && width < 30)
+							width = 30;
+					} else if (width > 0 && width < 100)
+						width = 100;
+				} else if (width > 0 && width < 100)
+					width = 100;
 
-	            header.setStyle("min-width: " + width + "px");
-        	}
-            ZKUpdateUtil.setHflex(header, "min");
-            m_headers.add(header);
-        }
-        else
-        {
-            header = m_headers.get(headerIndex);
+				header.setStyle("min-width: " + width + "px");
+			}
+			ZKUpdateUtil.setHflex(header, "min");
+			m_headers.add(header);
+		} else {
+			header = m_headers.get(headerIndex);
 
-            if (!header.getLabel().equals(headerText))
-            {
-                header.setLabel(headerText);
-            }
-        }
+			if (!header.getLabel().equals(headerText)) {
+				header.setLabel(headerText);
+			}
+		}
 
 		return header;
 	}
 
 	/**
 	 * set custom list header
+	 * 
 	 * @param index
 	 * @param header
 	 */
@@ -646,72 +581,68 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 			m_headers.set(index, header);
 	}
 
-    /**
-     * Obtain the comparator for a given column.
-     *
-     * @param ascending     whether the comparator will sort ascending
-     * @param columnIndex   the index of the column for which the comparator is required
-     * @return  comparator for the given column for the given direction
-     */
-    protected Comparator<Object> getColumnComparator(boolean ascending, final int columnIndex)
-    {
-    	return new ColumnComparator(ascending, columnIndex);
-    }
+	/**
+	 * Obtain the comparator for a given column.
+	 *
+	 * @param ascending   whether the comparator will sort ascending
+	 * @param columnIndex the index of the column for which the comparator is
+	 *                    required
+	 * @return comparator for the given column for the given direction
+	 */
+	protected Comparator<Object> getColumnComparator(boolean ascending, final int columnIndex) {
+		return new ColumnComparator(ascending, columnIndex);
+	}
 
-    public static class ColumnComparator implements Comparator<Object>
-    {
+	public static class ColumnComparator implements Comparator<Object> {
 
-    	private int columnIndex;
+		private int columnIndex;
 		private MSort sort;
 
-		public ColumnComparator(boolean ascending, int columnIndex)
-    	{
-    		this.columnIndex = columnIndex;
-    		sort = new MSort(0, null);
-        	sort.setSortAsc(ascending);
-    	}
+		public ColumnComparator(boolean ascending, int columnIndex) {
+			this.columnIndex = columnIndex;
+			sort = new MSort(0, null);
+			sort.setSortAsc(ascending);
+		}
 
-        public int compare(Object o1, Object o2)
-        {
-                Object item1 = ((List<?>)o1).get(columnIndex);
-                Object item2 = ((List<?>)o2).get(columnIndex);
-                return sort.compare(item1, item2);
-        }
+		public int compare(Object o1, Object o2) {
+			Object item1 = ((List<?>) o1).get(columnIndex);
+			Object item2 = ((List<?>) o2).get(columnIndex);
+			return sort.compare(item1, item2);
+		}
 
-		public int getColumnIndex()
-		{
+		public int getColumnIndex() {
 			return columnIndex;
 		}
-    }
+	}
 
 	/**
 	 * Render the ListHead for the table with headers for the table columns.
 	 *
-	 * @param head	The ListHead component to render.
+	 * @param head The ListHead component to render.
 	 * @see #addColumn(String)
 	 * @see #WListItemRenderer(List)
 	 */
-	public void renderListHead(ListHead head)
-	{
+	public void renderListHead(ListHead head) {
 		Component header;
-        WTableColumn column;
+		WTableColumn column;
 
-		for (int columnIndex = 0; columnIndex < m_tableColumns.size(); columnIndex++)
-        {
-            column = m_tableColumns.get(columnIndex);
-			header = getListHeaderComponent(column.getHeaderValue(), column.getTooltipText(), columnIndex, column.getColumnClass());
-            head.appendChild(header);
+		for (int columnIndex = 0; columnIndex < m_tableColumns.size(); columnIndex++) {
+			column = m_tableColumns.get(columnIndex);
+			header = getListHeaderComponent(column.getHeaderValue(), column.getTooltipText(), columnIndex,
+					column.getColumnClass());
+			head.appendChild(header);
 		}
 		head.setSizable(true);
 
 		return;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.zkoss.zk.ui.event.EventListener#onEvent(org.zkoss.zk.ui.event.Event)
 	 */
-	public void onEvent(Event event) throws Exception
-	{
+	public void onEvent(Event event) throws Exception {
 		int col = -1;
 		int row = -1;
 		Object value = null;
@@ -720,52 +651,40 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 
 		Component source = event.getTarget();
 
-		if (isWithinListCell(source))
-		{
+		if (isWithinListCell(source)) {
 			row = getRowPosition(source);
 			col = getColumnPosition(source);
 
 			tableColumn = m_tableColumns.get(col);
 
-			if (source instanceof Checkbox)
-			{
-				value = Boolean.valueOf(((Checkbox)source).isChecked());
-			}
-			else if (source instanceof Decimalbox)
-			{
-				value = ((Decimalbox)source).getValue();
-			}
-			else if (source instanceof Datebox)
-			{
-				if (((Datebox)source).getValue() != null)
-					value = new Timestamp(((Datebox)source).getValue().getTime());
-			}
-			else if (source instanceof Textbox)
-			{
-				value = ((Textbox)source).getValue();
-			}else if (source instanceof Button || source instanceof A || source instanceof ToolBarButton) { // update sergioropeza88@gmail.com
+			if (source instanceof Checkbox) {
+				value = Boolean.valueOf(((Checkbox) source).isChecked());
+			} else if (source instanceof Decimalbox) {
+				value = ((Decimalbox) source).getValue();
+			} else if (source instanceof Datebox) {
+				if (((Datebox) source).getValue() != null)
+					value = new Timestamp(((Datebox) source).getValue().getTime());
+			} else if (source instanceof Textbox) {
+				value = ((Textbox) source).getValue();
+			} else if (source instanceof Button || source instanceof A || source instanceof ToolBarButton) { // update
+																												// sergioropeza88@gmail.com
 				fireTableOnClickComponent(source, row, col);
-			}	
+			}
 
-			if(value != null)
-			{
-				vcEvent = new TableValueChangeEvent(source,
-						tableColumn.getHeaderValue().toString(),
-						row, col,
-						value, value);
+			if (value != null) {
+				vcEvent = new TableValueChangeEvent(source, tableColumn.getHeaderValue().toString(), row, col, value,
+						value);
 
 				fireTableValueChange(vcEvent);
 			}
-		}
-		else if (event.getTarget() instanceof WListbox && Events.ON_SELECT.equals(event.getName()))
-		{
+		} else if (event.getTarget() instanceof WListbox && Events.ON_SELECT.equals(event.getName())) {
 			WListbox table = (WListbox) event.getTarget();
 			if (table.isCheckmark()) {
 				int cnt = table.getRowCount();
 				if (cnt == 0 || !(table.getValueAt(0, 0) instanceof IDColumn))
 					return;
 
-				//update IDColumn
+				// update IDColumn
 				tableColumn = m_tableColumns.get(0);
 				for (int i = 0; i < cnt; i++) {
 					IDColumn idcolumn = (IDColumn) table.getValueAt(i, 0);
@@ -775,10 +694,8 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 					Boolean old = idcolumn.isSelected();
 
 					if (!old.equals(value)) {
-						vcEvent = new TableValueChangeEvent(source,
-								tableColumn.getHeaderValue().toString(),
-								i, 0,
-								old, value);
+						vcEvent = new TableValueChangeEvent(source, tableColumn.getHeaderValue().toString(), i, 0, old,
+								value);
 
 						fireTableValueChange(vcEvent);
 					}
@@ -789,25 +706,26 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 		return;
 	}
 
-	public void addTableOnClickComponentListener(OnClickComponentTableListener listener){ //Update sergioropeza88@gmail.com
-	    if (listener == null){
-	    	return;
-	    }
-	    onClickComponentlisteners.add(listener);
+	public void addTableOnClickComponentListener(OnClickComponentTableListener listener) { // Update
+																							// sergioropeza88@gmail.com
+		if (listener == null) {
+			return;
+		}
+		onClickComponentlisteners.add(listener);
 	}
-	
-	private void fireTableOnClickComponent( Object source,int index, int column) { //Update sergioropeza88@gmail.com
-	
-	    for (OnClickComponentTableListener listener : onClickComponentlisteners){
-	       listener.onClickComponentTable(null, source, index, column);
-	    }
+
+	private void fireTableOnClickComponent(Object source, int index, int column) { // Update sergioropeza88@gmail.com
+
+		for (OnClickComponentTableListener listener : onClickComponentlisteners) {
+			listener.onClickComponentTable(null, source, index, column);
+		}
 	}
-	
+
 	private boolean isWithinListCell(Component source) {
 		if (source instanceof Listcell)
 			return true;
 		Component c = source.getParent();
-		while(c != null) {
+		while (c != null) {
 			if (c instanceof Listcell)
 				return true;
 			c = c.getParent();
@@ -818,17 +736,16 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	/**
 	 * Get the row index of the given <code>source</code> component.
 	 *
-	 * @param source	The component for which the row index is to be found.
+	 * @param source The component for which the row index is to be found.
 	 * @return The row index of the given component.
 	 */
-	protected int getRowPosition(Component source)
-	{
+	protected int getRowPosition(Component source) {
 		Listcell cell;
 		ListItem item;
 		int row = -1;
 
 		cell = findListcell(source);
-		item = (ListItem)cell.getParent();
+		item = (ListItem) cell.getParent();
 
 		row = item.getIndex();
 
@@ -839,7 +756,7 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 		if (source instanceof Listcell)
 			return (Listcell) source;
 		Component c = source.getParent();
-		while(c != null) {
+		while (c != null) {
 			if (c instanceof Listcell)
 				return (Listcell) c;
 			c = c.getParent();
@@ -850,11 +767,10 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	/**
 	 * Get the column index of the given <code>source</code> component.
 	 *
-	 * @param source	The component for which the column index is to be found.
+	 * @param source The component for which the column index is to be found.
 	 * @return The column index of the given component.
 	 */
-	protected int getColumnPosition(Component source)
-	{
+	protected int getColumnPosition(Component source) {
 		Listcell cell;
 		int col = -1;
 
@@ -864,86 +780,80 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 		return col;
 	}
 
-
 	/**
-	 * Reset the renderer.
-	 * This should be called if the table using this renderer is cleared.
+	 * Reset the renderer. This should be called if the table using this renderer is
+	 * cleared.
 	 */
-	public void clearColumns()
-	{
+	public void clearColumns() {
 		m_tableColumns.clear();
 	}
 
 	/**
-	 * Clear the renderer.
-	 * This should be called if the table using this renderer is cleared.
+	 * Clear the renderer. This should be called if the table using this renderer is
+	 * cleared.
 	 */
-	public void clearSelection()
-	{
+	public void clearSelection() {
 		m_selectedItems.clear();
 	}
 
 	/**
 	 * Add a listener for changes in the table's component values.
 	 *
-	 * @param listener	The listener to add.
+	 * @param listener The listener to add.
 	 */
-	public void addTableValueChangeListener(TableValueChangeListener listener)
-	{
-	    if (listener == null)
-	    {
-	    	return;
-	    }
-
-	    m_listeners.add(listener);
-	}
-
-	public void removeTableValueChangeListener(TableValueChangeListener listener)
-	{
-		if (listener == null)
-	    {
-	    	return;
+	public void addTableValueChangeListener(TableValueChangeListener listener) {
+		if (listener == null) {
+			return;
 		}
 
-	    m_listeners.remove(listener);
+		m_listeners.add(listener);
+	}
+
+	public void removeTableValueChangeListener(TableValueChangeListener listener) {
+		if (listener == null) {
+			return;
+		}
+
+		m_listeners.remove(listener);
 	}
 
 	/**
 	 * Fire the given table value change <code>event</code>.
 	 *
-	 * @param event	The event to pass to the listeners
+	 * @param event The event to pass to the listeners
 	 */
-	private void fireTableValueChange(TableValueChangeEvent event)
-	{
-	    for (TableValueChangeListener listener : m_listeners)
-	    {
-	       listener.tableValueChange(event);
-	    }
+	private void fireTableValueChange(TableValueChangeEvent event) {
+		for (TableValueChangeListener listener : m_listeners) {
+			listener.tableValueChange(event);
+		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.zkoss.zul.ListitemRendererExt#getControls()
 	 */
-	public int getControls()
-	{
+	public int getControls() {
 		return DETACH_ON_RENDER;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.zkoss.zul.ListitemRendererExt#newListcell(org.zkoss.zul.Listitem)
 	 */
-	public Listcell newListcell(Listitem item)
-	{
+	public Listcell newListcell(Listitem item) {
 		ListCell cell = new ListCell();
 		cell.applyProperties();
 		return cell;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.zkoss.zul.ListitemRendererExt#newListitem(org.zkoss.zul.Listbox)
 	 */
-	public Listitem newListitem(Listbox listbox)
-	{
+	public Listitem newListitem(Listbox listbox) {
 		ListItem item = new ListItem();
 		item.applyProperties();
 
@@ -954,22 +864,19 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	 * @param index
 	 * @param header
 	 */
-	public void setColumnHeader(int index, String header)
-	{
-		if (index >= 0 && index < m_tableColumns.size())
-		{
+	public void setColumnHeader(int index, String header) {
+		if (index >= 0 && index < m_tableColumns.size()) {
 			m_tableColumns.get(index).setHeaderValue(Util.cleanAmp(header));
 		}
 
 	}
 
 	public void setColumnClass(int index, Class<?> classType) {
-		if (index >= 0 && index < m_tableColumns.size())
-		{
+		if (index >= 0 && index < m_tableColumns.size()) {
 			m_tableColumns.get(index).setColumnClass(classType);
 		}
 	}
-	
+
 	public List<WTableColumn> getTableColumns() {
 		return Collections.unmodifiableList(m_tableColumns);
 	}
@@ -993,52 +900,44 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 		int col = -1;
 		int row = -1;
 		Object source = evt.getSource();
-		 if (source instanceof WTableDirEditor) {
-			 WTableDirEditor te = (WTableDirEditor)source;
-			 te.setValue(evt.getNewValue());
-			 TableValueChangeEvent vcEvent = null;
-			 WTableColumn tableColumn;
-			 Object value = null;
-			if (isWithinListCell(te.getComponent())){
-				row = getRowPosition(te.getComponent());
-				col = getColumnPosition(te.getComponent());
-				tableColumn = m_tableColumns.get(col);
-				value = te;
-				if(value != null)
-				{
-					vcEvent = new TableValueChangeEvent(source,
-							tableColumn.getHeaderValue().toString(),
-							row, col,
-							value, value);
-
-					fireTableValueChange(vcEvent);
-				}
-			
-			}
-		}else  if (source instanceof WSearchEditor) {
-			WSearchEditor te = (WSearchEditor)source;
+		if (source instanceof WTableDirEditor) {
+			WTableDirEditor te = (WTableDirEditor) source;
 			te.setValue(evt.getNewValue());
 			TableValueChangeEvent vcEvent = null;
 			WTableColumn tableColumn;
 			Object value = null;
-			if (isWithinListCell(te.getComponent())){
+			if (isWithinListCell(te.getComponent())) {
 				row = getRowPosition(te.getComponent());
 				col = getColumnPosition(te.getComponent());
 				tableColumn = m_tableColumns.get(col);
 				value = te;
-				if(value != null)
-				{
-					vcEvent = new TableValueChangeEvent(source,
-							tableColumn.getHeaderValue().toString(),
-							row, col,
+				if (value != null) {
+					vcEvent = new TableValueChangeEvent(source, tableColumn.getHeaderValue().toString(), row, col,
 							value, value);
 
 					fireTableValueChange(vcEvent);
 				}
-			
+
+			}
+		} else if (source instanceof WSearchEditor) {
+			WSearchEditor te = (WSearchEditor) source;
+			te.setValue(evt.getNewValue());
+			TableValueChangeEvent vcEvent = null;
+			WTableColumn tableColumn;
+			Object value = null;
+			if (isWithinListCell(te.getComponent())) {
+				row = getRowPosition(te.getComponent());
+				col = getColumnPosition(te.getComponent());
+				tableColumn = m_tableColumns.get(col);
+				value = te;
+				if (value != null) {
+					vcEvent = new TableValueChangeEvent(source, tableColumn.getHeaderValue().toString(), row, col,
+							value, value);
+
+					fireTableValueChange(vcEvent);
+				}
+
 			}
 		}
 	}
 }
-
-

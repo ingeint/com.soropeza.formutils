@@ -9,6 +9,7 @@ import org.adempiere.webui.component.Combobox;
 import org.adempiere.webui.component.Grid;
 import org.adempiere.webui.component.Label;
 import org.adempiere.webui.component.NumberBox;
+import org.adempiere.webui.component.PAttributebox;
 import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
 import org.adempiere.webui.component.Textbox;
@@ -92,6 +93,11 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 				editorColumn.addValueChangeListener(this);
 				ZKUpdateUtil.setWidth(editorColumn.getComponent(), "100%");
 				row.appendCellChild(editorColumn.getComponent(), lstColSpan.get(i));
+			} else if (columns[i] instanceof AttributeColumn) {
+				AttributeColumn attributeColumn = (AttributeColumn) columns[i];
+				attributeColumn.addValueChangeListener(this);
+				ZKUpdateUtil.setWidth(attributeColumn.getComponent(), "100%");
+				row.appendCellChild(attributeColumn.getComponent(), lstColSpan.get(i));	
 
 			} else if (columns[i] instanceof TableDirEditorColumn) {
 				TableDirEditorColumn editorColumn = (TableDirEditorColumn) columns[i];
@@ -221,16 +227,19 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		} else if (component instanceof KeyNamePairColumn) {
 			KeyNamePairColumn editor = (KeyNamePairColumn) component;
 			value = editor.getRecord_ID();
-		}else if (component instanceof ComboEditorBox) {
+		} else if (component instanceof ComboEditorBox) {
 			ComboEditorBox editor = (ComboEditorBox) component;
 			WSearchEditor searchEditor = (WSearchEditor) editor.getAttribute("searchEditor");
 			value= searchEditor.getValue();	
-		}else if (component instanceof BooleanColumn) {
+		} else if (component instanceof BooleanColumn) {
 			BooleanColumn editor = (BooleanColumn) component;
 			value= editor.getValue();
 		} else if (component instanceof Textbox) {
 			Textbox editor = (Textbox) component;
 			value= editor.getValue();
+		} else if (component instanceof PAttributebox) {
+			PAttributebox attributeColumn = (PAttributebox) component;
+			value = Integer.parseInt(attributeColumn.getContext());
 		}
 		return value;
 	}
