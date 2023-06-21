@@ -2,17 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Formutils
 Bundle-SymbolicName: com.soropeza.formutils
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 10.0.0.qualifier
 Automatic-Module-Name: com.soropeza.formutils
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.adempiere.base,
  org.adempiere.ui.zk,
  org.adempiere.ui,
  zcommon,
- org.adempiere.plugin.utils;bundle-version="8.2.0",
  zul,
  zk,
- com.ingeint.custom.warehouse;bundle-version="9.0.0"
+ org.adempiere.plugin.utils;bundle-version="10.0.0"
 Export-Package: org.soropeza.event,
  org.soropeza.listener,
  org.soropeza.webui.component

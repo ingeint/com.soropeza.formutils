@@ -93,12 +93,6 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 				editorColumn.addValueChangeListener(this);
 				ZKUpdateUtil.setWidth(editorColumn.getComponent(), "100%");
 				row.appendCellChild(editorColumn.getComponent(), lstColSpan.get(i));
-			} else if (columns[i] instanceof AttributeColumn) {
-				AttributeColumn attributeColumn = (AttributeColumn) columns[i];
-				attributeColumn.addValueChangeListener(this);
-				ZKUpdateUtil.setWidth(attributeColumn.getComponent(), "100%");
-				row.appendCellChild(attributeColumn.getComponent(), lstColSpan.get(i));
-
 			} else if (columns[i] instanceof TableDirEditorColumn) {
 				TableDirEditorColumn editorColumn = (TableDirEditorColumn) columns[i];
 				editorColumn.addValueChangeListener(this);

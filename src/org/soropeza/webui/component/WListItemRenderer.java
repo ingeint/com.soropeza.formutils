@@ -389,15 +389,6 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 					listcell.setLabel(editor.getDisplay());
 				}
 
-			} else if (field instanceof AttributeColumn) {
-				AttributeColumn attributeColumn = (AttributeColumn) field;
-				if (isCellEditable) {
-					attributeColumn.addValueChangeListener(this);
-					listcell.appendChild(attributeColumn.getComponent());
-				} else {
-					listcell.setLabel(attributeColumn.getDisplay());
-				}
-
 			} else if (field instanceof WNumberEditor) {// update sergioropeza88@gmail.com
 				WNumberEditor editor = (WNumberEditor) field;
 				listcell.setValue(editor.getValue());
