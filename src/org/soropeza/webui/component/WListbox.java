@@ -85,12 +85,21 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 	public void clear() {
 		lines = new Vector<Vector<Object>>();	
 	}
+	
 	public void addLine(Object ...rows) {
 		Vector<Object> line = new Vector<Object>();
 		for (Object row : rows) {
 			line.add(row);
 		}
 		lines.add(line);
+	}
+	
+	public void addLine(Vector<Object> line) {
+		lines.add(line);
+	}
+	
+	public void setLine(int index, Vector<Object> line) {
+		lines.set(index, line);
 	}
 	
 	public void refresh() {
