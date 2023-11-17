@@ -41,6 +41,8 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 
 
 	private ListModelTable modelTable;
+	
+	private boolean multiple;
 
 	/**
 	 * Default constructor.
@@ -59,8 +61,13 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 		lines = new Vector<Vector<Object>>();
 		modelTable = new ListModelTable(lines);
 	}
-
-
+	
+	@Override
+	public void setMultiSelection(boolean multiSelection) {
+		super.setMultiSelection(multiSelection);
+		multiple = multiSelection;
+	}
+	
 	public void addOnClickComponentTableListener(OnClickComponentTableListener listener){ //Update sergioropeza88@gmail.com
 	    if (listener == null){
 	    	return;
@@ -81,7 +88,7 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 			refresh();
 		}
 	}
-
+	
 	public void clear() {
 		lines = new Vector<Vector<Object>>();	
 	}
@@ -104,24 +111,23 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 	
 	public void refresh() {
 		modelTable = new ListModelTable(lines);
+		modelTable.setMultiple(multiple);
 		setModel(modelTable);
 		repaint();
 	}
-
+	
 	public Vector<Vector<Object>> getLines() {
 		return lines;
 	}
-
-
+	
 	public void setLines(Vector<Vector<Object>> lines) {
 		this.lines = lines;
 	}
-
+	
 	public ListModelTable getModelTable() {
 		return modelTable;
 	}
-
-
+	
 	public void setModelTable(ListModelTable modelTable) {
 		this.modelTable = modelTable;
 	}
@@ -142,5 +148,4 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 		listBox.setSpan(true);
 		return listBox;
 	}
-
 }
