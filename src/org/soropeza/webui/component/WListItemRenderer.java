@@ -132,7 +132,7 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 	 *                    retrieved.
 	 * @return The details of the column at the specified index.
 	 */
-	private WTableColumn getColumn(int columnIndex) {
+	public WTableColumn getColumn(int columnIndex) {
 		try {
 			return m_tableColumns.get(columnIndex);
 		} catch (IndexOutOfBoundsException exception) {
