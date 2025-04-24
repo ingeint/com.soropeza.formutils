@@ -17,11 +17,14 @@
 
 package org.soropeza.webui.component;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import org.adempiere.webui.component.ListModelTable;
 import org.adempiere.webui.util.ZKUpdateUtil;
 import org.soropeza.listener.OnClickComponentTableListener;
+
+import com.ingeint.base.util.IngeintUtil;
 
 
 
@@ -147,5 +150,25 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 		listBox.setSizedByContent(true);
 		listBox.setSpan(true);
 		return listBox;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected ArrayList<Integer> getReadWriteColumn() {
+		return (ArrayList<Integer>) IngeintUtil
+				.getValue(org.adempiere.webui.component.WListbox.class, this, "m_readWriteColumn");
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected ArrayList<Class<?>> getHeaderClass() {
+		return (ArrayList<Class<?>>) IngeintUtil
+				.getValue(org.adempiere.webui.component.WListbox.class, this, "m_modelHeaderClass");
+	}
+	
+	public void resetColumnClass() {
+		ArrayList<Integer> m_readWriteColumn = getReadWriteColumn();
+		ArrayList<Class<?>> m_modelHeaderClass = getHeaderClass();
+		
+		m_readWriteColumn.clear();
+		m_modelHeaderClass.clear();
 	}
 }
