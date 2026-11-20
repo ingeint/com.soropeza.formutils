@@ -4,6 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: com.soropeza.formutils
 Bundle-SymbolicName: com.soropeza.formutils
 Bundle-Version: 13.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.adempiere.base;bundle-version="13.0.0",
  org.adempiere.plugin.utils;bundle-version="13.0.0",
  org.adempiere.ui;bundle-version="13.0.0",
